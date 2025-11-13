@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
+        ArrayList<Vehiculo> vehiculos = new ArrayList<>();
 
         vehiculos.add(
                 new Motocicleta(
