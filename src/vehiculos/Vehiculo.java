@@ -6,17 +6,17 @@ public abstract class Vehiculo {
 
     private String marca;
     private String modelo;
-    private int año;
+    private int anioFabricacion;
     private boolean usado;
     private boolean mantenimientoRealizado;
     private Color color;
 
     public Vehiculo() {}
 
-    public Vehiculo(String marca, String modelo, int año, boolean usado, Color color) {
+    public Vehiculo(String marca, String modelo, int anioFabricacion, boolean usado, Color color) {
         this.marca = marca;
         this.modelo = modelo;
-        this.año = año;
+        this.anioFabricacion = anioFabricacion;
         this.usado = usado;
         this.color = color;
         this.mantenimientoRealizado = !usado;
@@ -28,8 +28,13 @@ public abstract class Vehiculo {
     public String getModelo() { return modelo; }
     public void setModelo(String modelo) { this.modelo = modelo; }
 
-    public int getAño() { return año; }
-    public void setAño(int año) { this.año = año; }
+    public int getAnioFabricacion() {
+        return anioFabricacion;
+    }
+
+    public void setAnioFabricacion(int anioFabricacion) {
+        this.anioFabricacion = anioFabricacion;
+    }
 
     public boolean isUsado() { return usado; }
     public void setUsado(boolean usado) { this.usado = usado; }
@@ -42,6 +47,6 @@ public abstract class Vehiculo {
 
     @Override
     public String toString() {
-        return marca + " " + modelo + " (" + año + ") - Color: " + color + " - Usado: " + usado;
+        return marca + " " + modelo + " (" + anioFabricacion + ") - Color: " + color + " - Usado: " + usado;
     }
 }

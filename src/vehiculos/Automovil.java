@@ -7,8 +7,8 @@ public class Automovil extends Vehiculo {
 
     private TipoCarroceria carroceria;
 
-    public Automovil(String marca, String modelo, int año, boolean usado, Color color, TipoCarroceria carroceria) {
-        super(marca, modelo, año, usado, color);
+    public Automovil(String marca, String modelo, int anioFabricacion, boolean usado, Color color, TipoCarroceria carroceria) {
+        super(marca, modelo, anioFabricacion, usado, color);
         this.carroceria = carroceria;
     }
 

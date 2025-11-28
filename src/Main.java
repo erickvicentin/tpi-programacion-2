@@ -13,6 +13,6 @@ public class Main {
                 TipoCarroceria.HATCHBACK
         );
 
-        System.out.println(auto);
+
     }
 }
