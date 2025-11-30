@@ -4,7 +4,9 @@ import enums.Color;
 import enums.TipoMotocicleta;
 import excepciones.DatoInvalidoException;
 
-public class Motocicleta extends Vehiculo {
+import java.io.Serializable;
+
+public class Motocicleta extends Vehiculo implements Serializable {
 
     private TipoMotocicleta tipo;
     private int cilindrada;

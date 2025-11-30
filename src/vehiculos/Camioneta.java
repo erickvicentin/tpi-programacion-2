@@ -4,10 +4,12 @@ import enums.Color;
 import enums.TipoCarroceria;
 import excepciones.DatoInvalidoException;
 
-public class Camioneta extends Vehiculo {
+import java.io.Serializable;
+
+public class Camioneta extends Vehiculo implements Serializable {
 
     private TipoCarroceria carroceria;
-    private double capacidadDeCarga;
+    private int capacidadDeCarga;
 
     public Camioneta(
             String marca,
@@ -16,7 +18,7 @@ public class Camioneta extends Vehiculo {
             boolean usado,
             Color color,
             TipoCarroceria carroceria,
-            double capacidadDeCarga) {
+            int capacidadDeCarga) {
         super(marca, modelo, anioFabricacion, usado, color);
         this.carroceria = carroceria;
         this.setCapacidadDeCarga(capacidadDeCarga);
@@ -34,7 +36,7 @@ public class Camioneta extends Vehiculo {
         return capacidadDeCarga;
     }
 
-    public void setCapacidadDeCarga(double capacidadDeCarga) {
+    public void setCapacidadDeCarga(int capacidadDeCarga) {
         try {
             if (capacidadDeCarga <= 0) {
                 throw new DatoInvalidoException("La capacidad de carga debe ser mayor a 0.");

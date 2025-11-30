@@ -3,10 +3,11 @@ package vehiculos;
 import enums.Color;
 import interfaces.Lavable;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class Vehiculo implements Lavable, Comparable<Vehiculo> {
-    private final UUID idVehiculo = UUID.randomUUID();
+public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehiculo> {
+    private UUID idVehiculo;
     private String marca;
     private String modelo;
     private int anioFabricacion;
@@ -17,7 +18,8 @@ public abstract class Vehiculo implements Lavable, Comparable<Vehiculo> {
     public Vehiculo() {}
 
     public Vehiculo(String marca, String modelo, int anioFabricacion, boolean usado, Color color) {
-        this.marca = marca;
+        this.idVehiculo = UUID.randomUUID();
+        this.marca = "MORTAL";
         this.modelo = modelo;
         this.anioFabricacion = anioFabricacion;
         this.usado = usado;

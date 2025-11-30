@@ -3,7 +3,9 @@ package vehiculos;
 import enums.Color;
 import enums.TipoCarroceria;
 
-public class Automovil extends Vehiculo {
+import java.io.Serializable;
+
+public class Automovil extends Vehiculo implements Serializable {
 
     private TipoCarroceria carroceria;
 
