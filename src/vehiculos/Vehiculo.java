@@ -1,9 +1,12 @@
 package vehiculos;
 
 import enums.Color;
+import interfaces.Lavable;
 
-public abstract class Vehiculo {
+import java.util.UUID;
 
+public abstract class Vehiculo implements Lavable, Comparable<Vehiculo> {
+    private final UUID idVehiculo = UUID.randomUUID();
     private String marca;
     private String modelo;
     private int anioFabricacion;
@@ -20,6 +23,10 @@ public abstract class Vehiculo {
         this.usado = usado;
         this.color = color;
         this.mantenimientoRealizado = !usado;
+    }
+
+    public UUID getIdVehiculo() {
+        return idVehiculo;
     }
 
     public String getMarca() { return marca; }
@@ -47,6 +54,16 @@ public abstract class Vehiculo {
 
     @Override
     public String toString() {
-        return marca + " " + modelo + " (" + anioFabricacion + ") - Color: " + color + " - Usado: " + usado;
+        return "ID Vehiculo: " + idVehiculo + " | " + marca + " " + modelo + " (" + anioFabricacion + ") - Color: " + color + " - Usado: " + usado;
+    }
+
+    @Override
+    public void lavar() {
+        System.out.println("Lavando vehículo: " + this);
+    }
+
+    @Override
+    public int compareTo(Vehiculo v) {
+        return this.idVehiculo.compareTo(v.idVehiculo);
     }
 }
