@@ -5,6 +5,7 @@
 *.iml
 *.ipr
 *.iws
+*.vcs
 
 # Evita caches y archivos generados
 out/
