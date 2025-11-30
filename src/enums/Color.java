@@ -1,5 +1,7 @@
 package enums;
 
-public enum Color {
+import java.io.Serializable;
+
+public enum Color implements Serializable {
     NEGRO, BLANCO, ROJO, AZUL, GRIS,
 }
