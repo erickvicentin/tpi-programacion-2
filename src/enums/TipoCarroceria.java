@@ -1,5 +1,7 @@
 package enums;
 
-public enum TipoCarroceria {
+import java.io.Serializable;
+
+public enum TipoCarroceria implements Serializable {
     SEDAN, HATCHBACK, SUV, PICKUP, MODIFICADO, COUPE, CONVERTIBLE
 }
