@@ -1,31 +1,66 @@
-### IntelliJ IDEA ###
+# -----------------------------------------
+# INTELLIJ IDEA
+# -----------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Evita caches y archivos generados
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-.kotlin
+classes/
+target/
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+# -----------------------------------------
+# ARCHIVOS DEL SISTEMA
+# -----------------------------------------
+# Windows
+Thumbs.db
+Desktop.ini
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
-.idea
-
-### Mac OS ###
+# macOS
 .DS_Store
+
+# Linux
+*~
+
+# -----------------------------------------
+# JAVA
+# -----------------------------------------
+# Compilados
+*.class
+
+# Logs
+*.log
+
+# Archivos temporales
+*.swp
+*.swo
+
+# -----------------------------------------
+# MAVEN / GRADLE (si algún día lo agregás)
+# -----------------------------------------
+# Maven
+.mvn/timing.properties
+
+# Gradle
+.gradle/
+build/
+
+# -----------------------------------------
+# OTROS
+# -----------------------------------------
+# Archivos de IntelliJ que aparecen a veces
+out/
+
+# Archivos de ejecución
+*.jar
+*.war
+*.ear
+
+# Archivos de configuración de seguridad
+*.key
+*.pem
+
+# Archivos de entorno
+.env
