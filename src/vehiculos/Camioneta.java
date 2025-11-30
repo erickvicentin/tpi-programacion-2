@@ -2,7 +2,7 @@ package vehiculos;
 
 import enums.Color;
 import enums.TipoCarroceria;
-import excepciones.CapacidadDeCargaNoValidaException;
+import excepciones.DatoInvalidoException;
 
 public class Camioneta extends Vehiculo {
 
@@ -37,11 +37,11 @@ public class Camioneta extends Vehiculo {
     public void setCapacidadDeCarga(double capacidadDeCarga) {
         try {
             if (capacidadDeCarga <= 0) {
-                throw new CapacidadDeCargaNoValidaException("La capacidad de carga debe ser mayor a 0.");
+                throw new DatoInvalidoException("La capacidad de carga debe ser mayor a 0.");
             } else {
                 this.capacidadDeCarga = capacidadDeCarga;
             }
-        } catch (CapacidadDeCargaNoValidaException e) {
+        } catch (DatoInvalidoException e) {
             e.printStackTrace();
         }
     }
