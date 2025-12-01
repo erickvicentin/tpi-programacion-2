@@ -4,10 +4,12 @@ import enums.Color;
 import interfaces.Lavable;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehiculo> {
-    private UUID idVehiculo;
+
+    private final UUID idVehiculo;
     private String marca;
     private String modelo;
     private int anioFabricacion;
@@ -15,11 +17,9 @@ public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehi
     private boolean mantenimientoRealizado;
     private Color color;
 
-    public Vehiculo() {}
-
     public Vehiculo(String marca, String modelo, int anioFabricacion, boolean usado, Color color) {
         this.idVehiculo = UUID.randomUUID();
-        this.marca = "MORTAL";
+        this.marca = marca;
         this.modelo = modelo;
         this.anioFabricacion = anioFabricacion;
         this.usado = usado;
@@ -56,7 +56,11 @@ public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehi
 
     @Override
     public String toString() {
-        return "ID Vehiculo: " + idVehiculo + " | " + marca + " " + modelo + " (" + anioFabricacion + ") - Color: " + color + " - Usado: " + usado;
+        return "ID: " + idVehiculo +
+                " | " + marca + " " + modelo +
+                " (" + anioFabricacion + ")" +
+                " - Color: " + color +
+                " - Usado: " + usado;
     }
 
     @Override
@@ -67,5 +71,17 @@ public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehi
     @Override
     public int compareTo(Vehiculo v) {
         return this.idVehiculo.compareTo(v.idVehiculo);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vehiculo vehiculo)) return false;
+        return idVehiculo.equals(vehiculo.idVehiculo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idVehiculo);
     }
 }
