@@ -1,11 +1,12 @@
 package servicios;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Wrapper<T> {
+public class Wrapper<T> implements Serializable {
 
-    private List<T> elementos = new ArrayList<>();
+    private final List<T> elementos = new ArrayList<>();
 
     public void agregar(T e) { elementos.add(e); }
     public T obtener(int i) { return elementos.get(i); }
