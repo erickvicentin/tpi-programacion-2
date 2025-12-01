@@ -1,23 +1,33 @@
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
+import enums.Color;
+import enums.TipoCarroceria;
+import enums.TipoMotocicleta;
+import excepciones.ColaVaciaException;
+import persistencia.ArchivoUtil;
+import servicios.Lavadero;
+import servicios.Taller;
 import utils.EnumUtils;
-import vehiculos.*;
-import excepciones.*;
-import enums.*;
-import servicios.*;
-import persistencia.*;
+import vehiculos.Automovil;
+import vehiculos.Camioneta;
+import vehiculos.Motocicleta;
+import vehiculos.Vehiculo;
+
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Scanner;
 
 public class Main {
 
-    private static Scanner sc = new Scanner(System.in);
-    private static Queue<Vehiculo> colaTaller = new LinkedList<>();
-    private static Concesionaria concesionaria = new Concesionaria(colaTaller);
-    private static Lavadero lavadero = new Lavadero();
-    private static Taller taller = new Taller(colaTaller, lavadero);
+    private static final Scanner sc = new Scanner(System.in);
+    private static final Queue<Vehiculo> colaTaller = new LinkedList<>();
+    private static final Concesionaria concesionaria = new Concesionaria(colaTaller);
+    private static final Lavadero lavadero = new Lavadero();
+    private static final Taller taller = new Taller(colaTaller, lavadero);
 
     public static void main(String[] args) {
+
+        cargarInventarioInicial();   //🔥 CARGA AUTOMÁTICA
 
         int opcion;
         do {
@@ -28,15 +38,15 @@ public class Main {
                 case 1 -> agregarVehiculo();
                 case 2 -> listarVehiculos();
                 case 3 -> buscarVehiculo();
-                case 4 -> eliminarVehiculo();
+                case 4 -> eliminarVehiculoAvanzado(); //🔥 Eliminación avanzada por ID
                 case 5 -> procesarTaller();
-                case 6 -> guardarInventario();
-                case 7 -> cargarInventario();
                 case 0 -> System.out.println("Saliendo del sistema...");
                 default -> System.out.println("Opción inválida.");
             }
 
         } while (opcion != 0);
+
+        guardarInventarioAutomatico(); //🔥 GUARDADO AUTOMÁTICO
     }
 
     // ============================================================
@@ -45,151 +55,283 @@ public class Main {
 
     private static void mostrarMenuPrincipal() {
         System.out.println("\n========= CONCESIONARIA =========");
-        System.out.println("1. Agregar vehiculo");
-        System.out.println("2. Listar vehiculos");
-        System.out.println("3. Buscar vehiculo");
-        System.out.println("4. Eliminar vehiculo");
-        System.out.println("5. Procesar vehiculo en taller");
-        System.out.println("6. Guardar inventario");
-        System.out.println("7. Cargar inventario");
+        System.out.println("1. Agregar vehículo");
+        System.out.println("2. Listar vehículos");
+        System.out.println("3. Buscar vehículo");
+        System.out.println("4. Eliminar vehículo");
+        System.out.println("5. Procesar vehículo en taller");
         System.out.println("0. Salir");
     }
 
     private static void mostrarMenuTipos() {
-        System.out.println("\n--- TIPOS DE VEHICULOS ---");
-        System.out.println("1. Automovil");
+        System.out.println("\n--- TIPOS DE VEHÍCULO ---");
+        System.out.println("1. Automóvil");
         System.out.println("2. Camioneta");
         System.out.println("3. Motocicleta");
     }
 
     // ============================================================
-    // OPCIONES DEL MENU
+    // CARGA Y GUARDADO AUTOMÁTICO
+    // ============================================================
+
+    private static void cargarInventarioInicial() {
+        File f = new File("vehiculos.dat");
+
+        if (!f.exists()) {
+            System.out.println("No existe inventario previo. Arrancando vacío.");
+            return;
+        }
+
+        try {
+            List<Vehiculo> lista = ArchivoUtil.leer("vehiculos.dat");
+            lista.forEach(concesionaria::agregarSiNoExiste); // evita duplicados
+            System.out.println("Inventario cargado automáticamente.");
+        } catch (Exception e) {
+            System.out.println("Error cargando inventario: " + e.getMessage());
+        }
+    }
+
+    private static void guardarInventarioAutomatico() {
+        try {
+            ArchivoUtil.guardar(concesionaria.listar(), "vehiculos.dat");
+            System.out.println("Inventario guardado automáticamente.");
+        } catch (Exception e) {
+            System.out.println("Error guardando inventario: " + e.getMessage());
+        }
+    }
+
+    // ============================================================
+    // AGREGAR
     // ============================================================
 
     private static void agregarVehiculo() {
         mostrarMenuTipos();
         int tipo = leerEntero("Seleccione el tipo: ");
+
         String marca = leerString("Marca: ");
         String modelo = leerString("Modelo: ");
-        int anio = leerEntero("anio: ");
-        boolean usado = leerBoolean("¿Es usado? (1=Si, 0=No): ");
+        int anio = leerEntero("Año: ");
+        boolean usado = leerBoolean("¿Es usado? (1=Sí, 0=No): ");
 
         System.out.println("Colores disponibles: " + EnumUtils.generarStringDeEnumGenerico(Color.class));
         Color color = Color.values()[EnumUtils.leerEnum("Seleccione el color: ", Color.class)];
-
 
         Vehiculo v = null;
 
         switch (tipo) {
             case 1 -> {
-                System.out.println("Carrocerias: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceria.class));
-                TipoCarroceria carroceria = TipoCarroceria.values()[EnumUtils.leerEnum("Seleccione carroceria: ", TipoCarroceria.class)];
+                System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceria.class));
+                TipoCarroceria carroceria =
+                        TipoCarroceria.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceria.class)];
                 v = new Automovil(marca, modelo, anio, usado, color, carroceria);
             }
             case 2 -> {
-                System.out.println("Carrocerias: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceria.class));
-                TipoCarroceria carroceria = TipoCarroceria.values()[EnumUtils.leerEnum("Seleccione carroceria: ", TipoCarroceria.class)];
-                int capacidadDeCarga = leerEntero("Capacidad de carga: ");
-                v = new Camioneta(marca, modelo, anio, usado, color, carroceria, capacidadDeCarga);
+                System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceria.class));
+                TipoCarroceria carroceria =
+                        TipoCarroceria.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceria.class)];
+
+                int carga = leerEntero("Capacidad de carga (kg): ");
+                v = new Camioneta(marca, modelo, anio, usado, color, carroceria, carga);
             }
             case 3 -> {
-                System.out.println("Tipos de motocicleta: " + Arrays.toString(TipoMotocicleta.values()));
-                TipoMotocicleta tipoMoto = TipoMotocicleta.valueOf(leerString("Tipo: ").toUpperCase());
-                int cilindrada = leerEntero("Cantidad de cilindradas: ");
+                System.out.println("Tipos de moto: " + EnumUtils.generarStringDeEnumGenerico(TipoMotocicleta.class));
+                TipoMotocicleta tipoMoto =
+                        TipoMotocicleta.values()[EnumUtils.leerEnum("Tipo de moto: ", TipoMotocicleta.class)];
+                int cilindrada = leerEntero("Cilindrada: ");
                 v = new Motocicleta(marca, modelo, anio, usado, color, tipoMoto, cilindrada);
             }
-            default -> System.out.println("Tipo invalido.");
+            default -> System.out.println("Tipo inválido.");
         }
 
         if (v != null) {
             concesionaria.agregarVehiculo(v);
-            System.out.println("Vehiculo agregado correctamente.");
+            guardarInventarioAutomatico();
+            System.out.println("Vehículo agregado correctamente.");
         }
     }
 
+    // ============================================================
+    // LISTAR / BUSCAR
+    // ============================================================
+
     private static void listarVehiculos() {
-        System.out.println("\n--- LISTADO DE VEHICULOS ---");
-        concesionaria.listar().forEach(System.out::println);
+        List<Vehiculo> lista = concesionaria.listar();
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay vehículos cargados.");
+            return;
+        }
+
+        System.out.println("\n--- LISTADO DE VEHÍCULOS ---");
+        lista.forEach(System.out::println);
     }
 
     private static void buscarVehiculo() {
-        String modelo = leerString("Modelo a buscar: ");
+
+        System.out.println("\n--- BUSCAR VEHÍCULO ---");
+        System.out.println("1. Por marca");
+        System.out.println("2. Por modelo");
+        System.out.println("3. Por año");
+        System.out.println("4. Combinado (marca + modelo)");
+        System.out.println("5. Combinado (marca + año)");
+        System.out.println("6. Combinado (modelo + año)");
+        System.out.println("7. Por estado (nuevo/usado)");
+
+        int op = leerEntero("Opción: ");
+
+        String marca = null;
+        String modelo = null;
+        Integer anio = null;
+        Boolean usado = null;
+
+        switch (op) {
+            case 1 -> marca = leerString("Marca: ");
+            case 2 -> modelo = leerString("Modelo: ");
+            case 3 -> anio = leerEntero("Año: ");
+            case 4 -> {
+                marca = leerString("Marca: ");
+                modelo = leerString("Modelo: ");
+            }
+            case 5 -> {
+                marca = leerString("Marca: ");
+                anio = leerEntero("Año: ");
+            }
+            case 6 -> {
+                modelo = leerString("Modelo: ");
+                anio = leerEntero("Año: ");
+            }
+            case 7 -> {
+                System.out.println("1. Usado");
+                System.out.println("0. Nuevo");
+                usado = leerBoolean("Seleccione estado (1=Usado, 0=Nuevo): ");
+            }
+            default -> {
+                System.out.println("Opción inválida.");
+                return;
+            }
+        }
+
+        List<Vehiculo> resultados =
+                concesionaria.buscarMultiples(marca, modelo, anio, usado);
+
+        if (resultados.isEmpty()) {
+            System.out.println("\nNo se encontraron vehículos con esos criterios.");
+            return;
+        }
+
+        System.out.println("\n--- RESULTADOS ---");
+        for (int i = 0; i < resultados.size(); i++) {
+            System.out.println((i + 1) + ") " + resultados.get(i));
+        }
+
+        if (resultados.size() == 1) {
+            System.out.println("\nSe encontró 1 coincidencia.");
+            return;
+        }
+
+        int seleccion = leerEntero("Seleccione un número para ver detalles (0 para salir): ");
+
+        if (seleccion == 0) return;
+        if (seleccion < 1 || seleccion > resultados.size()) {
+            System.out.println("Opción inválida.");
+            return;
+        }
+
+        Vehiculo elegido = resultados.get(seleccion - 1);
+
+        System.out.println("\n--- DETALLES DEL VEHÍCULO ---");
+        System.out.println(elegido);
+    }
+
+    // ============================================================
+    // ELIMINACIÓN AVANZADA POR ID Y BÚSQUEDA MULTIPLE
+    // ============================================================
+
+    private static void eliminarVehiculoAvanzado() {
+
+        System.out.println("\n--- ELIMINAR VEHÍCULO ---");
+        System.out.println("1. Por marca");
+        System.out.println("2. Por modelo");
+        System.out.println("3. Por año");
+
+        int op = leerEntero("Opción: ");
+
+        String marca = null;
+        String modelo = null;
+        Integer anio = null;
+
+        switch (op) {
+            case 1 -> marca = leerString("Marca: ");
+            case 2 -> modelo = leerString("Modelo: ");
+            case 3 -> anio = leerEntero("Año: ");
+            default -> {
+                System.out.println("Opción inválida.");
+                return;
+            }
+        }
+
+        List<Vehiculo> resultados = concesionaria.buscarMultiples(marca, modelo, anio, null);
+
+        if (resultados.isEmpty()) {
+            System.out.println("No hubo coincidencias.");
+            return;
+        }
+
+        System.out.println("\nCoincidencias encontradas:");
+        for (int i = 0; i < resultados.size(); i++) {
+            Vehiculo v = resultados.get(i);
+            System.out.println((i + 1) + ") " + v);
+        }
+
+        int seleccion = leerEntero("Seleccione el número del vehículo a eliminar: ") - 1;
+
+        if (seleccion < 0 || seleccion >= resultados.size()) {
+            System.out.println("Opción inválida.");
+            return;
+        }
+
+        Vehiculo elegido = resultados.get(seleccion);
+
         try {
-            Vehiculo v = concesionaria.buscar(modelo);
-            System.out.println("Encontrado: " + v);
-        } catch (VehiculoNoEncontradoException e) {
-            System.out.println(e.getMessage());
+            concesionaria.eliminarPorId(elegido.getIdVehiculo());
+            guardarInventarioAutomatico(); // se guarda automáticamente
+            System.out.println("Vehículo eliminado correctamente.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    private static void eliminarVehiculo() {
-        String modelo = leerString("Modelo a eliminar: ");
-        try {
-            concesionaria.eliminar(modelo);
-            System.out.println("Vehiculo eliminado.");
-        } catch (VehiculoNoEncontradoException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+
+    // ============================================================
+    // TALLER
+    // ============================================================
 
     private static void procesarTaller() {
         try {
             taller.procesar();
         } catch (ColaVaciaException e) {
-            System.out.println("No hay vehiculos usados para procesar.");
+            System.out.println("No hay vehículos usados en la cola.");
         }
     }
-
-    private static void guardarInventario() {
-        try {
-            ArchivoUtil.guardar(concesionaria.listar(), "vehiculos.dat");
-            System.out.println("Inventario guardado exitosamente.");
-        } catch (IOException e) {
-            System.out.println("Error al guardar archivo: " + e.getMessage());
-        }
-    }
-
-
-    private static void cargarInventario() {
-        File f = new File("vehiculos.dat");
-
-        if (!f.exists()) {
-            System.out.println("Todavia no existe un archivo de inventario para cargar.");
-            return;
-        }
-
-        try {
-            var lista = ArchivoUtil.leer("vehiculos.dat");
-            lista.forEach((vehiculo) -> {
-                System.out.println(vehiculo);
-                concesionaria.agregarVehiculo(vehiculo);
-            });
-            System.out.println("Inventario cargado correctamente.");
-        } catch (Exception e) {
-            System.out.println("Error al cargar el inventario: " + e.getMessage());
-        }
-    }
-
 
     // ============================================================
     // UTILIDADES
     // ============================================================
 
-
     private static int leerEntero(String msg) {
         while (true) {
             System.out.print(msg);
             try {
-                return Integer.parseInt(sc.nextLine());
+                return Integer.parseInt(sc.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Ingrese un numero valido.");
+                System.out.println("Ingrese un número válido.");
             }
         }
     }
 
     private static String leerString(String msg) {
         System.out.print(msg);
-        return sc.nextLine();
+        return sc.nextLine().trim();
     }
 
     private static boolean leerBoolean(String msg) {
@@ -198,7 +340,7 @@ public class Main {
             String input = sc.nextLine().trim();
             if (input.equals("1")) return true;
             if (input.equals("0")) return false;
-            System.out.println("Ingrese una opcion valida.");
+            System.out.println("Ingrese 1 (sí) o 0 (no).");
         }
     }
 }

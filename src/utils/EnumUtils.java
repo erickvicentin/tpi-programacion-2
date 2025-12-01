@@ -1,7 +1,6 @@
 package utils;
 
 import java.util.Scanner;
-import java.lang.Enum;
 
 public class EnumUtils {
 
@@ -24,7 +23,7 @@ public class EnumUtils {
 
         for (int i = 0; i < valores.length; i++) {
             // El número es la posición (ordinal()) + 1
-            int numero = valores[i].ordinal() + 1;
+            int numero = valores[i].ordinal();
             String nombre = valores[i].name();
 
             sb.append("[").append(numero).append("-").append(nombre).append("]");
@@ -51,42 +50,26 @@ public class EnumUtils {
      */
     public static <T extends Enum<T>> int leerEnum(String msg, Class<T> enumClass) {
 
+        Scanner sc = new Scanner(System.in);
         T[] valores = enumClass.getEnumConstants();
-        int maxOpciones = valores.length - 1;
+        int max = valores.length - 1;
 
-        if (maxOpciones == 0) {
-            System.err.println("Error: El Enum " + enumClass.getSimpleName() + " no tiene opciones.");
-            return -1;
-        }
+        while (true) {
+            System.out.print(msg + " (0-" + max + "): ");
 
-        // Podríamos usar el primer método para generar el string, pero aquí lo mostramos línea por línea
-        System.out.println("\n--- " + msg + " ---");
-        for (int i = 0; i < maxOpciones; i++) {
-            System.out.println((i) + ". " + valores[i].name());
-        }
-        System.out.print("Ingrese su opción (1 a " + maxOpciones + "): ");
+            try {
+                int opcion = Integer.parseInt(sc.nextLine().trim());
 
-        // Lógica de Lectura y Validación (usando Scanner para I/O)
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (true) {
-                if (scanner.hasNextInt()) {
-                    int opcionElegida = scanner.nextInt();
-
-                    if (opcionElegida >= 1 && opcionElegida <= maxOpciones) {
-                        return opcionElegida;
-                    } else {
-                        System.out.println("Error: Opción fuera de rango. Ingrese un número entre 1 y " + maxOpciones + ".");
-                    }
-                } else {
-                    scanner.next(); // Consume la entrada no válida
-                    System.out.println("Error: Ingrese un valor numérico entero. Intente de nuevo.");
+                if (opcion >= 0 && opcion <= max) {
+                    return opcion;
                 }
 
-                System.out.print("Ingrese su opción (1 a " + maxOpciones + "): ");
+                System.out.println("Error: opción fuera de rango.");
+
+            } catch (NumberFormatException e) {
+                System.out.println("Error: ingrese un número válido.");
             }
-        } catch (Exception e) {
-            System.err.println("Ocurrió un error de lectura: " + e.getMessage());
-            return -1;
         }
     }
+
 }
