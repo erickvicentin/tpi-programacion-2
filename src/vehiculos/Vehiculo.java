@@ -68,7 +68,7 @@ public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehi
     }
 
     @Override
-    public void lavar() throws InterruptedException {
+    public void lavar() {
         try {
             System.out.println("Lavando vehículo: " + this.getShortDescription());
             Thread.sleep(3500);
