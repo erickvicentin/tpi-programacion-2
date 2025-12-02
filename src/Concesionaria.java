@@ -15,10 +15,6 @@ public class Concesionaria {
         this.colaTaller = colaTaller;
     }
 
-    // ============================================================
-    // AGREGAR VEHÍCULO (evita duplicados por UUID)
-    // ============================================================
-
     public void agregarVehiculo(Vehiculo v) {
         if (!inventario.contains(v)) {
             inventario.add(v);
@@ -34,21 +30,6 @@ public class Concesionaria {
         }
     }
 
-    // ============================================================
-    // BÚSQUEDA POR MODELO
-    // ============================================================
-
-    public Vehiculo buscar(String modelo) throws VehiculoNoEncontradoException {
-        return inventario.stream()
-                .filter(v -> v.getModelo().equalsIgnoreCase(modelo))
-                .findFirst()
-                .orElseThrow(() -> new VehiculoNoEncontradoException("Vehículo no encontrado."));
-    }
-
-    // ============================================================
-    // BUSQUEDA MÚLTIPLE: marca / modelo / año
-    // ============================================================
-
     public List<Vehiculo> buscarMultiples(String marca, String modelo, Integer anio, Boolean usado) {
 
         return inventario.stream()
@@ -63,11 +44,6 @@ public class Concesionaria {
                 .toList();
     }
 
-
-    // ============================================================
-    // ELIMINAR POR ID
-    // ============================================================
-
     public void eliminarPorId(UUID id) throws VehiculoNoEncontradoException {
         boolean eliminado = inventario.removeIf(v -> v.getIdVehiculo().equals(id));
 
@@ -75,10 +51,6 @@ public class Concesionaria {
             throw new VehiculoNoEncontradoException("No se encontró un vehículo con ese ID.");
         }
     }
-
-    // ============================================================
-    // LISTAR
-    // ============================================================
 
     public List<Vehiculo> listar() {
         return new ArrayList<>(inventario);

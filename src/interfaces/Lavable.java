@@ -1,6 +1,6 @@
 package interfaces;
 
 public interface Lavable {
-    void lavar();
+    void lavar() throws InterruptedException;
 }
 

@@ -38,8 +38,8 @@ public class Camioneta extends Vehiculo implements Serializable {
 
     public void setCapacidadDeCarga(int capacidadDeCarga) {
         try {
-            if (capacidadDeCarga <= 0) {
-                throw new DatoInvalidoException("La capacidad de carga debe ser mayor a 0.");
+            if (capacidadDeCarga <= 0 || capacidadDeCarga > 5000) {
+                throw new DatoInvalidoException("La capacidad de carga debe ser mayor a 0 y menor o igual a 5000.");
             } else {
                 this.capacidadDeCarga = capacidadDeCarga;
             }

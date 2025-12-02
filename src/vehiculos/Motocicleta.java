@@ -27,8 +27,8 @@ public class Motocicleta extends Vehiculo implements Serializable {
 
     public void setCilindrada(int cilindrada) {
         try {
-            if (cilindrada <= 0) {
-                throw new DatoInvalidoException("El motor no puede tener una cilindrada menor o igual a 0");
+            if (cilindrada <= 49 || cilindrada > 2000) {
+                throw new DatoInvalidoException("El motor no puede tener una cilindrada menor a 50 o mayor a 2000");
             } else {
                 this.cilindrada = cilindrada;
             }
