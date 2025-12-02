@@ -7,6 +7,7 @@ import persistencia.ArchivoUtil;
 import servicios.Lavadero;
 import servicios.Taller;
 import utils.EnumUtils;
+import utils.InputUtils;
 import vehiculos.Automovil;
 import vehiculos.Camioneta;
 import vehiculos.Motocicleta;
@@ -16,11 +17,11 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 
-    private static final Scanner sc = new Scanner(System.in);
     private static final Queue<Vehiculo> colaTaller = new LinkedList<>();
     private static final Concesionaria concesionaria = new Concesionaria(colaTaller);
     private static final Lavadero lavadero = new Lavadero();
@@ -33,7 +34,7 @@ public class Main {
         int opcion;
         do {
             mostrarMenuPrincipal();
-            opcion = leerEntero("Opción: ");
+            opcion = InputUtils.leerEntero("Opción: ");
 
             switch (opcion) {
                 case 1 -> agregarVehiculo();
@@ -41,6 +42,7 @@ public class Main {
                 case 3 -> buscarVehiculo();
                 case 4 -> eliminarVehiculo();
                 case 5 -> procesarTaller();
+                case 6 -> modificarVehiculo();
                 case 0 -> {
                     try {
                         System.out.println("Saliendo del sistema...");
@@ -68,6 +70,7 @@ public class Main {
         System.out.println("3. Buscar vehículo");
         System.out.println("4. Eliminar vehículo");
         System.out.println("5. Procesar vehículo en taller");
+        System.out.println("6. Modificar vehículo");
         System.out.println("0. Salir");
     }
 
@@ -76,6 +79,7 @@ public class Main {
         System.out.println("1. Automóvil");
         System.out.println("2. Camioneta");
         System.out.println("3. Motocicleta");
+        System.out.println("0. Salir");
     }
 
     private static void cargarInventarioInicial() {
@@ -106,47 +110,51 @@ public class Main {
 
     private static void agregarVehiculo() {
         mostrarMenuTipos();
-        int tipo = leerEntero("Seleccione el tipo: ");
+        int tipo = InputUtils.leerEntero("Seleccione el tipo: ");
+        boolean salir = false;
 
-        String marca = leerString("Marca: ");
-        String modelo = leerString("Modelo: ");
-        int anio = leerEntero("Año: ");
-        boolean usado = leerBoolean("¿Es usado? (1=Sí, 0=No): ");
+        while (tipo != 0 && !salir) {
+            String marca = InputUtils.leerString("Marca: ");
+            String modelo = InputUtils.leerString("Modelo: ");
+            int anio = InputUtils.leerAnioValido("Año: ");
+            boolean usado = InputUtils.leerBoolean("¿Es usado? (1=Sí, 0=No): ");
 
-        System.out.println("Colores disponibles: " + EnumUtils.generarStringDeEnumGenerico(Color.class));
-        Color color = Color.values()[EnumUtils.leerEnum("Seleccione el color: ", Color.class)];
+            System.out.println("Colores disponibles: " + EnumUtils.generarStringDeEnumGenerico(Color.class));
+            Color color = Color.values()[EnumUtils.leerEnum("Seleccione el color: ", Color.class)];
 
-        Vehiculo v = null;
+            Vehiculo v = null;
 
-        switch (tipo) {
-            case 1 -> {
-                System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceriaAuto.class));
-                TipoCarroceriaAuto carroceria =
-                        TipoCarroceriaAuto.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceriaAuto.class)];
-                v = new Automovil(marca, modelo, anio, usado, color, carroceria);
+            switch (tipo) {
+                case 1 -> {
+                    System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceriaAuto.class));
+                    TipoCarroceriaAuto carroceria =
+                            TipoCarroceriaAuto.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceriaAuto.class)];
+                    v = new Automovil(marca, modelo, anio, usado, color, carroceria);
+                }
+                case 2 -> {
+                    System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceriaCamioneta.class));
+                    TipoCarroceriaCamioneta carroceria =
+                            TipoCarroceriaCamioneta.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceriaCamioneta.class)];
+
+                    int carga = InputUtils.leerEntero("Capacidad de carga (kg): ");
+                    v = new Camioneta(marca, modelo, anio, usado, color, carroceria, carga);
+                }
+                case 3 -> {
+                    System.out.println("Tipos de moto: " + EnumUtils.generarStringDeEnumGenerico(TipoMotocicleta.class));
+                    TipoMotocicleta tipoMoto =
+                            TipoMotocicleta.values()[EnumUtils.leerEnum("Tipo de moto: ", TipoMotocicleta.class)];
+                    int cilindrada = InputUtils.leerEntero("Cilindrada: ");
+                    v = new Motocicleta(marca, modelo, anio, usado, color, tipoMoto, cilindrada);
+                }
+                default -> System.out.println("Tipo inválido.");
             }
-            case 2 -> {
-                System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceriaCamioneta.class));
-                TipoCarroceriaCamioneta carroceria =
-                        TipoCarroceriaCamioneta.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceriaCamioneta.class)];
 
-                int carga = leerEntero("Capacidad de carga (kg): ");
-                v = new Camioneta(marca, modelo, anio, usado, color, carroceria, carga);
+            if (v != null) {
+                concesionaria.agregarVehiculo(v);
+                guardarInventarioAutomatico();
+                System.out.println("Vehículo agregado correctamente.");
+                salir = true;
             }
-            case 3 -> {
-                System.out.println("Tipos de moto: " + EnumUtils.generarStringDeEnumGenerico(TipoMotocicleta.class));
-                TipoMotocicleta tipoMoto =
-                        TipoMotocicleta.values()[EnumUtils.leerEnum("Tipo de moto: ", TipoMotocicleta.class)];
-                int cilindrada = leerEntero("Cilindrada: ");
-                v = new Motocicleta(marca, modelo, anio, usado, color, tipoMoto, cilindrada);
-            }
-            default -> System.out.println("Tipo inválido.");
-        }
-
-        if (v != null) {
-            concesionaria.agregarVehiculo(v);
-            guardarInventarioAutomatico();
-            System.out.println("Vehículo agregado correctamente.");
         }
     }
 
@@ -173,7 +181,7 @@ public class Main {
         System.out.println("6. Combinado (modelo + año)");
         System.out.println("7. Por estado (nuevo/usado)");
 
-        int op = leerEntero("Opción: ");
+        int op = InputUtils.leerEntero("Opción: ");
 
         String marca = null;
         String modelo = null;
@@ -181,25 +189,25 @@ public class Main {
         Boolean usado = null;
 
         switch (op) {
-            case 1 -> marca = leerString("Marca: ");
-            case 2 -> modelo = leerString("Modelo: ");
-            case 3 -> anio = leerEntero("Año: ");
+            case 1 -> marca = InputUtils.leerString("Marca: ");
+            case 2 -> modelo = InputUtils.leerString("Modelo: ");
+            case 3 -> anio = InputUtils.leerEntero("Año: ");
             case 4 -> {
-                marca = leerString("Marca: ");
-                modelo = leerString("Modelo: ");
+                marca = InputUtils.leerString("Marca: ");
+                modelo = InputUtils.leerString("Modelo: ");
             }
             case 5 -> {
-                marca = leerString("Marca: ");
-                anio = leerEntero("Año: ");
+                marca = InputUtils.leerString("Marca: ");
+                anio = InputUtils.leerEntero("Año: ");
             }
             case 6 -> {
-                modelo = leerString("Modelo: ");
-                anio = leerEntero("Año: ");
+                modelo = InputUtils.leerString("Modelo: ");
+                anio = InputUtils.leerEntero("Año: ");
             }
             case 7 -> {
                 System.out.println("1. Usado");
                 System.out.println("0. Nuevo");
-                usado = leerBoolean("Seleccione estado (1=Usado, 0=Nuevo): ");
+                usado = InputUtils.leerBoolean("Seleccione estado (1=Usado, 0=Nuevo): ");
             }
             default -> {
                 System.out.println("Opción inválida.");
@@ -222,10 +230,11 @@ public class Main {
 
         if (resultados.size() == 1) {
             System.out.println("\nSe encontró 1 coincidencia.");
+            mostrarDetallesVehiculo(resultados.get(0));
             return;
         }
 
-        int seleccion = leerEntero("Seleccione un número para ver detalles (0 para salir): ");
+        int seleccion = InputUtils.leerEntero("Seleccione un número para ver detalles (0 para salir): ");
 
         if (seleccion == 0) return;
         if (seleccion < 1 || seleccion > resultados.size()) {
@@ -247,16 +256,16 @@ public class Main {
         System.out.println("2. Por modelo");
         System.out.println("3. Por año");
 
-        int op = leerEntero("Opción: ");
+        int op = InputUtils.leerEntero("Opción: ");
 
         String marca = null;
         String modelo = null;
         Integer anio = null;
 
         switch (op) {
-            case 1 -> marca = leerString("Marca: ");
-            case 2 -> modelo = leerString("Modelo: ");
-            case 3 -> anio = leerEntero("Año: ");
+            case 1 -> marca = InputUtils.leerString("Marca: ");
+            case 2 -> modelo = InputUtils.leerString("Modelo: ");
+            case 3 -> anio = InputUtils.leerEntero("Año: ");
             default -> {
                 System.out.println("Opción inválida.");
                 return;
@@ -276,7 +285,7 @@ public class Main {
             System.out.println((i + 1) + ") " + v);
         }
 
-        int seleccion = leerEntero("Seleccione el número del vehículo a eliminar: ") - 1;
+        int seleccion = InputUtils.leerEntero("Seleccione el número del vehículo a eliminar: ") - 1;
 
         if (seleccion < 0 || seleccion >= resultados.size()) {
             System.out.println("Opción inválida.");
@@ -294,41 +303,182 @@ public class Main {
         }
     }
 
+    //Modificacion de vehiculo
+    private static void modificarVehiculo() {
+
+        System.out.println("\n--- MODIFICAR VEHÍCULO ---");
+        System.out.println("Primero busquemos el vehículo a modificar.");
+
+        // Buscamos usando la misma lógica que búsqueda avanzada
+        System.out.println("1. Por marca");
+        System.out.println("2. Por modelo");
+        System.out.println("3. Por año");
+        System.out.println("4. Combinado (marca + modelo)");
+        System.out.println("5. Combinado (marca + año)");
+        System.out.println("6. Combinado (modelo + año)");
+        System.out.println("7. Por estado (nuevo/usado)");
+
+        int op = InputUtils.leerEntero("Opción: ");
+
+        String marca = null;
+        String modelo = null;
+        Integer anio = null;
+        Boolean usado = null;
+
+        switch (op) {
+            case 1 -> marca = InputUtils.leerString("Marca: ");
+            case 2 -> modelo = InputUtils.leerString("Modelo: ");
+            case 3 -> anio = InputUtils.leerEntero("Año: ");
+            case 4 -> {
+                marca = InputUtils.leerString("Marca: ");
+                modelo = InputUtils.leerString("Modelo: ");
+            }
+            case 5 -> {
+                marca = InputUtils.leerString("Marca: ");
+                anio = InputUtils.leerEntero("Año: ");
+            }
+            case 6 -> {
+                modelo = InputUtils.leerString("Modelo: ");
+                anio = InputUtils.leerEntero("Año: ");
+            }
+            case 7 -> usado = InputUtils.leerBoolean("1=Usado, 0=Nuevo: ");
+            default -> {
+                System.out.println("Opción inválida.");
+                return;
+            }
+        }
+
+        List<Vehiculo> resultados = concesionaria.buscarMultiples(marca, modelo, anio, usado);
+
+        if (resultados.isEmpty()) {
+            System.out.println("No se encontraron vehículos.");
+            return;
+        }
+
+        System.out.println("\nVehículos encontrados:");
+        for (int i = 0; i < resultados.size(); i++) {
+            System.out.println((i + 1) + ") " + resultados.get(i));
+        }
+
+        int seleccion = InputUtils.leerEntero("Seleccione uno para modificar (0 para salir): ");
+        if (seleccion == 0) return;
+        if (seleccion < 1 || seleccion > resultados.size()) {
+            System.out.println("Opción inválida.");
+            return;
+        }
+
+        Vehiculo v = resultados.get(seleccion - 1);
+
+        System.out.println("\n--- DETALLES DEL VEHÍCULO ---");
+        mostrarDetallesVehiculo(v);
+
+        System.out.println("\n--- ¿QUÉ DESEA MODIFICAR? ---");
+        System.out.println("1. Marca");
+        System.out.println("2. Modelo");
+        System.out.println("3. Año");
+        System.out.println("4. Color");
+        System.out.println("5. Estado (Nuevo/Usado)");
+
+        int baseOptions = 5;
+
+        if (v instanceof Automovil)
+            System.out.println("6. Carrocería (Auto)");
+
+        if (v instanceof Camioneta) {
+            System.out.println("6. Carrocería (Camioneta)");
+            System.out.println("7. Capacidad de carga");
+        }
+
+        if (v instanceof Motocicleta) {
+            System.out.println("6. Tipo de motocicleta");
+            System.out.println("7. Cilindrada");
+        }
+
+        int mod = InputUtils.leerEntero("Opción: ");
+
+        switch (mod) {
+            case 1 -> v.setMarca(InputUtils.leerString("Nueva marca: "));
+            case 2 -> v.setModelo(InputUtils.leerString("Nuevo modelo: "));
+            case 3 -> v.setAnioFabricacion(InputUtils.leerAnioValido("Nuevo año: "));
+            case 4 -> {
+                System.out.println("Colores: " + EnumUtils.generarStringDeEnumGenerico(Color.class));
+                Color color = Color.values()[EnumUtils.leerEnum("Seleccione color: ", Color.class)];
+                v.setColor(color);
+            }
+            case 5 -> v.setUsado(InputUtils.leerBoolean("1=Usado, 0=Nuevo: "));
+
+            // Automóvil
+            case 6 -> {
+                if (v instanceof Automovil a) {
+                    System.out.println("Carrocerías de auto: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceriaAuto.class));
+                    TipoCarroceriaAuto carro =
+                            TipoCarroceriaAuto.values()[EnumUtils.leerEnum("Seleccione: ", TipoCarroceriaAuto.class)];
+                    a.setCarroceria(carro);
+                }
+                else if (v instanceof Camioneta c) {
+                    System.out.println("Carrocerías de camioneta: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceriaCamioneta.class));
+                    TipoCarroceriaCamioneta carro =
+                            TipoCarroceriaCamioneta.values()[EnumUtils.leerEnum("Seleccione: ", TipoCarroceriaCamioneta.class)];
+                    c.setCarroceria(carro);
+                }
+                else if (v instanceof Motocicleta m) {
+                    System.out.println("Tipos de moto: " + Arrays.toString(TipoMotocicleta.values()));
+                    TipoMotocicleta tipoMoto =
+                            TipoMotocicleta.valueOf(InputUtils.leerString("Nuevo tipo: ").toUpperCase());
+                    m.setTipo(tipoMoto);
+                }
+            }
+
+            case 7 -> {
+                if (v instanceof Camioneta c) {
+                    int nuevaCarga = InputUtils.leerEntero("Nueva capacidad de carga: ");
+                    c.setCapacidadDeCarga(nuevaCarga);
+                } else if (v instanceof Motocicleta m) {
+                    int nuevaCil = InputUtils.leerEntero("Nueva cilindrada: ");
+                    m.setCilindrada(nuevaCil);
+                } else {
+                    System.out.println("Opción no válida para este tipo de vehículo.");
+                }
+            }
+
+            default -> System.out.println("Opción inválida.");
+        }
+
+        guardarInventarioAutomatico();
+        System.out.println("Vehículo modificado correctamente.");
+    }
+
+
     //Funcion de taller
 
     private static void procesarTaller() {
+
+        if (colaTaller.isEmpty()) {
+            System.out.println("No hay vehículos usados para procesar.");
+            return;
+        }
+
+        System.out.println("\n--- VEHÍCULOS EN COLA DE TALLER ---");
+        List<Vehiculo> lista = new ArrayList<>(colaTaller);
+
+        for (int i = 0; i < lista.size(); i++) {
+            System.out.println((i + 1) + ") " + lista.get(i));
+        }
+
+        int seleccion = InputUtils.leerEntero("Seleccione un vehículo para procesar (0 para salir): ");
+
+        if (seleccion == 0) return;
+
+        if (seleccion < 1 || seleccion > lista.size()) {
+            System.out.println("Opción inválida.");
+            return;
+        }
+
         try {
-            taller.procesar();
+            taller.procesarPorIndice(seleccion - 1);
+            guardarInventarioAutomatico();
         } catch (ColaVaciaException e) {
-            System.out.println("No hay vehículos usados en la cola.");
-        }
-    }
-
-    //Funciones de utilidad
-
-    private static int leerEntero(String msg) {
-        while (true) {
-            System.out.print(msg);
-            try {
-                return Integer.parseInt(sc.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Ingrese un número válido.");
-            }
-        }
-    }
-
-    private static String leerString(String msg) {
-        System.out.print(msg);
-        return sc.nextLine().trim();
-    }
-
-    private static boolean leerBoolean(String msg) {
-        while (true) {
-            System.out.print(msg);
-            String input = sc.nextLine().trim();
-            if (input.equals("1")) return true;
-            if (input.equals("0")) return false;
-            System.out.println("Ingrese 1 (sí) o 0 (no).");
+            System.out.println(e.getMessage());
         }
     }
 
