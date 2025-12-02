@@ -1,5 +1,6 @@
 import enums.Color;
-import enums.TipoCarroceria;
+import enums.TipoCarroceriaAuto;
+import enums.TipoCarroceriaCamioneta;
 import enums.TipoMotocicleta;
 import excepciones.ColaVaciaException;
 import persistencia.ArchivoUtil;
@@ -25,9 +26,9 @@ public class Main {
     private static final Lavadero lavadero = new Lavadero();
     private static final Taller taller = new Taller(colaTaller, lavadero);
 
-    public static void main(String[] args) {
-
-        cargarInventarioInicial();   //🔥 CARGA AUTOMÁTICA
+    public static void main(String[] args) throws InterruptedException {
+        //al iniciar el programa ya cargamos el inventario, si existe.
+        cargarInventarioInicial();
 
         int opcion;
         do {
@@ -38,9 +39,16 @@ public class Main {
                 case 1 -> agregarVehiculo();
                 case 2 -> listarVehiculos();
                 case 3 -> buscarVehiculo();
-                case 4 -> eliminarVehiculoAvanzado(); //🔥 Eliminación avanzada por ID
+                case 4 -> eliminarVehiculo();
                 case 5 -> procesarTaller();
-                case 0 -> System.out.println("Saliendo del sistema...");
+                case 0 -> {
+                    try {
+                        System.out.println("Saliendo del sistema...");
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 default -> System.out.println("Opción inválida.");
             }
 
@@ -70,10 +78,6 @@ public class Main {
         System.out.println("3. Motocicleta");
     }
 
-    // ============================================================
-    // CARGA Y GUARDADO AUTOMÁTICO
-    // ============================================================
-
     private static void cargarInventarioInicial() {
         File f = new File("vehiculos.dat");
 
@@ -100,10 +104,6 @@ public class Main {
         }
     }
 
-    // ============================================================
-    // AGREGAR
-    // ============================================================
-
     private static void agregarVehiculo() {
         mostrarMenuTipos();
         int tipo = leerEntero("Seleccione el tipo: ");
@@ -120,15 +120,15 @@ public class Main {
 
         switch (tipo) {
             case 1 -> {
-                System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceria.class));
-                TipoCarroceria carroceria =
-                        TipoCarroceria.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceria.class)];
+                System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceriaAuto.class));
+                TipoCarroceriaAuto carroceria =
+                        TipoCarroceriaAuto.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceriaAuto.class)];
                 v = new Automovil(marca, modelo, anio, usado, color, carroceria);
             }
             case 2 -> {
-                System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceria.class));
-                TipoCarroceria carroceria =
-                        TipoCarroceria.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceria.class)];
+                System.out.println("Carrocerías: " + EnumUtils.generarStringDeEnumGenerico(TipoCarroceriaCamioneta.class));
+                TipoCarroceriaCamioneta carroceria =
+                        TipoCarroceriaCamioneta.values()[EnumUtils.leerEnum("Seleccione carrocería: ", TipoCarroceriaCamioneta.class)];
 
                 int carga = leerEntero("Capacidad de carga (kg): ");
                 v = new Camioneta(marca, modelo, anio, usado, color, carroceria, carga);
@@ -149,10 +149,6 @@ public class Main {
             System.out.println("Vehículo agregado correctamente.");
         }
     }
-
-    // ============================================================
-    // LISTAR / BUSCAR
-    // ============================================================
 
     private static void listarVehiculos() {
         List<Vehiculo> lista = concesionaria.listar();
@@ -240,14 +236,11 @@ public class Main {
         Vehiculo elegido = resultados.get(seleccion - 1);
 
         System.out.println("\n--- DETALLES DEL VEHÍCULO ---");
-        System.out.println(elegido);
+        mostrarDetallesVehiculo(elegido);
     }
 
-    // ============================================================
-    // ELIMINACIÓN AVANZADA POR ID Y BÚSQUEDA MULTIPLE
-    // ============================================================
-
-    private static void eliminarVehiculoAvanzado() {
+    //Eliminacion de vehiculo
+    private static void eliminarVehiculo() {
 
         System.out.println("\n--- ELIMINAR VEHÍCULO ---");
         System.out.println("1. Por marca");
@@ -301,10 +294,7 @@ public class Main {
         }
     }
 
-
-    // ============================================================
-    // TALLER
-    // ============================================================
+    //Funcion de taller
 
     private static void procesarTaller() {
         try {
@@ -314,9 +304,7 @@ public class Main {
         }
     }
 
-    // ============================================================
-    // UTILIDADES
-    // ============================================================
+    //Funciones de utilidad
 
     private static int leerEntero(String msg) {
         while (true) {
@@ -343,4 +331,41 @@ public class Main {
             System.out.println("Ingrese 1 (sí) o 0 (no).");
         }
     }
+
+    private static void mostrarDetallesVehiculo(Vehiculo v) {
+        System.out.println("\nVehículo seleccionado:");
+
+        if (v instanceof Automovil a) {
+            System.out.println("├─ Tipo: Automóvil");
+        } else if (v instanceof Camioneta c) {
+            System.out.println("├─ Tipo: Camioneta");
+        } else if (v instanceof Motocicleta m) {
+            System.out.println("├─ Tipo: Motocicleta");
+        }
+
+        System.out.println("├─ Datos generales:");
+        System.out.println("│  ├─ Marca: " + v.getMarca());
+        System.out.println("│  ├─ Modelo: " + v.getModelo());
+        System.out.println("│  ├─ Año: " + v.getAnioFabricacion());
+        System.out.println("│  ├─ Color: " + v.getColor());
+        System.out.println("│  ├─ Usado: " + (v.isUsado() ? "Sí" : "No"));
+
+        if (v instanceof Automovil a) {
+            System.out.println("├─ Específicos de automóvil:");
+            System.out.println("│  ├─ Carrocería: " + a.getCarroceria());
+        }
+
+        if (v instanceof Camioneta c) {
+            System.out.println("├─ Específicos de camioneta:");
+            System.out.println("│  ├─ Carrocería: " + c.getCarroceria());
+            System.out.println("│  ├─ Capacidad de carga: " + c.getCapacidadDeCarga() + " kg");
+        }
+
+        if (v instanceof Motocicleta m) {
+            System.out.println("├─ Específicos de motocicleta:");
+            System.out.println("│  ├─ Tipo: " + m.getTipo());
+            System.out.println("│  ├─ Cilindrada: " + m.getCilindrada() + " cc");
+        }
+    }
+
 }
