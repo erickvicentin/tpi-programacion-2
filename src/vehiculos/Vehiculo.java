@@ -54,6 +54,10 @@ public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehi
     public Color getColor() { return color; }
     public void setColor(Color color) { this.color = color; }
 
+    public String getShortDescription() {
+        return marca + " " + modelo + " (" + anioFabricacion + " - " + color + ")";
+    }
+
     @Override
     public String toString() {
         return "ID: " + idVehiculo +
@@ -64,8 +68,13 @@ public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehi
     }
 
     @Override
-    public void lavar() {
-        System.out.println("Lavando vehículo: " + this);
+    public void lavar() throws InterruptedException {
+        try {
+            System.out.println("Lavando vehículo: " + this.getShortDescription());
+            Thread.sleep(3500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
