@@ -1,6 +1,6 @@
 package persistencia;
 
-import servicios.Wrapper;
+import utils.Wrapper;
 import vehiculos.Vehiculo;
 
 import java.io.*;
@@ -9,9 +9,6 @@ import java.util.List;
 
 public class ArchivoUtil {
 
-    // ============================================================
-    // GUARDAR INVENTARIO
-    // ============================================================
     public static void guardar(List<Vehiculo> lista, String archivo) throws IOException {
 
         // Convertimos la lista en Wrapper
@@ -25,9 +22,6 @@ public class ArchivoUtil {
         }
     }
 
-    // ============================================================
-    // LEER INVENTARIO
-    // ============================================================
     @SuppressWarnings("unchecked")
     public static List<Vehiculo> leer(String archivo)
             throws IOException, ClassNotFoundException {
@@ -44,7 +38,7 @@ public class ArchivoUtil {
             Object obj = ois.readObject();
 
             if (obj instanceof Wrapper<?> wrapperObj) {
-                // Convertimos wrapper -> lista
+                // Convertimos el wrapper a lista
                 return ((Wrapper<Vehiculo>) wrapperObj).getLista();
             } else {
                 throw new IOException("El archivo no contiene datos válidos.");

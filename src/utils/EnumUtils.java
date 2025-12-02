@@ -4,14 +4,6 @@ import java.util.Scanner;
 
 public class EnumUtils {
 
-    // --- 1. Generación de String (Método anterior, solo para visualización) ---
-
-    /**
-     * Genera un String formateado [1-VALOR, 2-VALOR, ...] para cualquier Enum.
-     * @param enumClass La clase del Enum a procesar.
-     * @param <T> El tipo del Enum (debe extender Enum).
-     * @return Un String con el formato deseado.
-     */
     public static <T extends Enum<T>> String generarStringDeEnumGenerico(Class<T> enumClass) {
         T[] valores = enumClass.getEnumConstants();
 
@@ -36,18 +28,6 @@ public class EnumUtils {
         return sb.toString();
     }
 
-    // --------------------------------------------------------------------------
-
-    // --- 2. Lectura y Validación (El método que pide la opción) ---
-
-    /**
-     * Muestra las opciones de un Enum, pide una entrada al usuario y valida el rango.
-     *
-     * @param msg El mensaje de instrucción a mostrar.
-     * @param enumClass La clase del Enum a procesar (ej: Colores.class).
-     * @param <T> El tipo del Enum (debe extender Enum).
-     * @return El número de la opción seleccionada (base 1).
-     */
     public static <T extends Enum<T>> int leerEnum(String msg, Class<T> enumClass) {
 
         Scanner sc = new Scanner(System.in);
@@ -63,7 +43,6 @@ public class EnumUtils {
                 if (opcion >= 0 && opcion <= max) {
                     return opcion;
                 }
-
                 System.out.println("Error: opción fuera de rango.");
 
             } catch (NumberFormatException e) {
