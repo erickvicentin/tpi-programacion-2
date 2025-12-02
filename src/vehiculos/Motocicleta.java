@@ -36,4 +36,8 @@ public class Motocicleta extends Vehiculo implements Serializable {
             e.printStackTrace();
         }
     }
+
+    public int getCilindrada() {
+        return cilindrada;
+    }
 }

@@ -1,14 +1,14 @@
 package vehiculos;
 
 import enums.Color;
-import enums.TipoCarroceria;
+import enums.TipoCarroceriaCamioneta;
 import excepciones.DatoInvalidoException;
 
 import java.io.Serializable;
 
 public class Camioneta extends Vehiculo implements Serializable {
 
-    private TipoCarroceria carroceria;
+    private TipoCarroceriaCamioneta carroceria;
     private int capacidadDeCarga;
 
     public Camioneta(
@@ -17,18 +17,18 @@ public class Camioneta extends Vehiculo implements Serializable {
             int anioFabricacion,
             boolean usado,
             Color color,
-            TipoCarroceria carroceria,
+            TipoCarroceriaCamioneta carroceria,
             int capacidadDeCarga) {
         super(marca, modelo, anioFabricacion, usado, color);
         this.carroceria = carroceria;
         this.setCapacidadDeCarga(capacidadDeCarga);
     }
 
-    public void setCarroceria(TipoCarroceria c) {
+    public void setCarroceria(TipoCarroceriaCamioneta c) {
         this.carroceria = c;
     }
 
-    public TipoCarroceria getCarroceria() {
+    public TipoCarroceriaCamioneta getCarroceria() {
         return carroceria;
     }
 
