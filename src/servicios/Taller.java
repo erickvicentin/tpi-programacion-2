@@ -1,7 +1,6 @@
 package servicios;
 
 import excepciones.ColaVaciaException;
-import interfaces.Mantenible;
 import vehiculos.Vehiculo;
 
 import java.util.ArrayList;
