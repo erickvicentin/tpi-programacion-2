@@ -40,4 +40,22 @@ public class Motocicleta extends Vehiculo implements Serializable {
     public int getCilindrada() {
         return cilindrada;
     }
+
+    @Override
+    public double calcularPrecioDeVenta() {
+        int anioActual = java.time.LocalDate.now().getYear();
+        int antiguedad = anioActual - this.getAnioFabricacion();
+        // Extra por cilindrada
+        double extraCilindrada = ((double) this.getCilindrada() / 50) * 500;
+        if(!this.isUsado()) {
+            return extraCilindrada + 7000;
+        }
+
+        double base = 5000;
+        // Descuento por antigüedad
+        double precio = base + extraCilindrada - (antiguedad * 200);
+        // Precio mínimo
+        return Math.max(precio, 3000);
+    }
+
 }

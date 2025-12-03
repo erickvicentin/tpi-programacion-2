@@ -62,18 +62,21 @@ public class PrintUtils {
         if (v instanceof Automovil a) {
             System.out.println("├─ Específicos de automóvil:");
             System.out.println("│  ├─ Carrocería: " + a.getCarroceria());
+            System.out.println("│  ├─ Precio estimado de venta: $" + a.calcularPrecioDeVenta());
         }
 
         if (v instanceof Camioneta c) {
             System.out.println("├─ Específicos de camioneta:");
             System.out.println("│  ├─ Carrocería: " + c.getCarroceria());
             System.out.println("│  ├─ Capacidad de carga: " + c.getCapacidadDeCarga() + " kg");
+            System.out.println("│  ├─ Precio estimado de venta: $" + c.calcularPrecioDeVenta());
         }
 
         if (v instanceof Motocicleta m) {
             System.out.println("├─ Específicos de motocicleta:");
             System.out.println("│  ├─ Tipo: " + m.getTipo());
             System.out.println("│  ├─ Cilindrada: " + m.getCilindrada() + " cc");
+            System.out.println("│  ├─ Precio estimado de venta: $" + m.calcularPrecioDeVenta());
         }
     }
 }

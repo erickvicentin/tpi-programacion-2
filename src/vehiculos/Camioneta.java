@@ -40,4 +40,22 @@ public class Camioneta extends Vehiculo implements Serializable {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public double calcularPrecioDeVenta() {
+        int anioActual = java.time.LocalDate.now().getYear();
+        int antiguedad = anioActual - this.getAnioFabricacion();
+
+        // Extra por capacidad de carga (cada 1000 kg suma 5000)
+        double extraCarga = (this.getCapacidadDeCarga() / 1000) * 5000;
+
+        if (!this.isUsado()) {
+            return 30000 + extraCarga;
+        }
+        double base = 20000;
+        // Descuento por antigüedad
+        double precio = base + extraCarga - (antiguedad * 500);
+        // Precio mínimo
+        return Math.max(precio, 10000);
+    }
 }

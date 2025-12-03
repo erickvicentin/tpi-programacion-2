@@ -58,6 +58,8 @@ public abstract class Vehiculo implements Lavable, Serializable, Comparable<Vehi
         return marca + " " + modelo + " (" + anioFabricacion + " - " + color + ")";
     }
 
+    public abstract double calcularPrecioDeVenta();
+
     @Override
     public String toString() {
         return "ID: " + idVehiculo +
