@@ -55,7 +55,6 @@ build/
 out/
 
 # Archivos de ejecución
-*.jar
 *.war
 *.ear
 
