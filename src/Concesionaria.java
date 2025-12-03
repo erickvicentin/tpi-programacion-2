@@ -17,10 +17,6 @@ public class Concesionaria {
     }
 
     public void agregarVehiculo(Vehiculo v) {
-        agregarSiNoExiste(v);
-    }
-
-    public void agregarSiNoExiste(Vehiculo v) {
         boolean existe = inventario.stream()
                 .anyMatch(x -> x.getIdVehiculo().equals(v.getIdVehiculo()));
 
@@ -30,7 +26,7 @@ public class Concesionaria {
         }
     }
 
-    public List<Vehiculo> buscarMultiples(String marca, String modelo, Integer anio, Boolean usado) {
+    public List<Vehiculo> buscarVehiculo(String marca, String modelo, Integer anio, Boolean usado) {
         return inventario.stream()
                 .filter(v -> marca == null
                         || v.getMarca().equalsIgnoreCase(marca)
@@ -43,7 +39,7 @@ public class Concesionaria {
                 .collect(Collectors.toList());
     }
 
-    public void eliminarPorId(UUID id) throws VehiculoNoEncontradoException {
+    public void eliminarVehiculo(UUID id) throws VehiculoNoEncontradoException {
         Vehiculo encontrado = inventario.stream()
                 .filter(v -> v.getIdVehiculo().equals(id))
                 .findFirst()
@@ -57,7 +53,7 @@ public class Concesionaria {
         colaTaller.remove(encontrado); // en caso de que estuviera en la cola del taller
     }
 
-    public List<Vehiculo> listar() {
+    public List<Vehiculo> listarVehiculos() {
         return new ArrayList<>(inventario);
     }
 }

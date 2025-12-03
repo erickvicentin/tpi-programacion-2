@@ -86,7 +86,7 @@ public class Main {
 
         try {
             List<Vehiculo> lista = IOFilesUtils.leer("vehiculos.dat");
-            lista.forEach(concesionaria::agregarSiNoExiste);
+            lista.forEach(concesionaria::agregarVehiculo);
             PrintUtils.ok("Inventario cargado automáticamente.");
         } catch (Exception e) {
             PrintUtils.error("Error cargando inventario: " + e.getMessage());
@@ -95,7 +95,7 @@ public class Main {
 
     private static void guardarInventarioAutomatico() {
         try {
-            IOFilesUtils.guardar(concesionaria.listar(), "vehiculos.dat");
+            IOFilesUtils.guardar(concesionaria.listarVehiculos(), "vehiculos.dat");
             PrintUtils.ok("Inventario guardado automáticamente.");
         } catch (Exception e) {
             PrintUtils.error("Error guardando inventario: " + e.getMessage());
@@ -161,7 +161,7 @@ public class Main {
     }
 
     private static void listarVehiculos() {
-        List<Vehiculo> lista = concesionaria.listar();
+        List<Vehiculo> lista = concesionaria.listarVehiculos();
 
         if (lista.isEmpty()) {
             PrintUtils.error("No hay vehículos cargados.");
@@ -205,7 +205,7 @@ public class Main {
             }
         }
 
-        List<Vehiculo> res = concesionaria.buscarMultiples(marca, modelo, anio, usado);
+        List<Vehiculo> res = concesionaria.buscarVehiculo(marca, modelo, anio, usado);
 
         if (res.isEmpty()) {
             PrintUtils.error("No se encontraron coincidencias.");
@@ -246,7 +246,7 @@ public class Main {
             }
         }
 
-        List<Vehiculo> res = concesionaria.buscarMultiples(marca, modelo, anio, null);
+        List<Vehiculo> res = concesionaria.buscarVehiculo(marca, modelo, anio, null);
 
         if (res.isEmpty()) {
             PrintUtils.error("No hubo coincidencias.");
@@ -264,7 +264,7 @@ public class Main {
         }
 
         try {
-            concesionaria.eliminarPorId(res.get(sel).getIdVehiculo());
+            concesionaria.eliminarVehiculo(res.get(sel).getIdVehiculo());
             guardarInventarioAutomatico();
             PrintUtils.ok("Vehículo eliminado.");
         } catch (Exception e) {
@@ -305,7 +305,7 @@ public class Main {
             }
         }
 
-        List<Vehiculo> lista = concesionaria.buscarMultiples(marca, modelo, anio, usado);
+        List<Vehiculo> lista = concesionaria.buscarVehiculo(marca, modelo, anio, usado);
 
         if (lista.isEmpty()) {
             PrintUtils.error("No se encontraron vehículos.");
