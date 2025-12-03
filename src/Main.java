@@ -15,7 +15,12 @@ import vehiculos.Motocicleta;
 import vehiculos.Vehiculo;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Arrays;
+import java.util.ArrayList;
+
 
 public class Main {
 
@@ -25,7 +30,6 @@ public class Main {
     private static final Taller taller = new Taller(colaTaller, lavadero);
 
     public static void main(String[] args) {
-
         cargarInventarioInicial();
 
         int opcion;
@@ -72,10 +76,6 @@ public class Main {
         System.out.println("0. Salir");
     }
 
-    // ============================================================
-    // INVENTARIO AUTOMÁTICO
-    // ============================================================
-
     private static void cargarInventarioInicial() {
         File f = new File("vehiculos.dat");
 
@@ -102,12 +102,7 @@ public class Main {
         }
     }
 
-    // ============================================================
-    // OPCIONES PRINCIPALES
-    // ============================================================
-
     private static void agregarVehiculo() {
-
         mostrarMenuTipos();
         int tipo = InputUtils.leerEntero("Seleccione el tipo: ");
         if (tipo == 0) return;
@@ -155,7 +150,7 @@ public class Main {
                 v = new Motocicleta(marca, modelo, anio, usado, color, tipoMoto, cil);
             }
             default -> {
-                PrintUtils.error("Tipo inválido.");
+                PrintUtils.error("Tipo de vehiculo inválido.");
                 return;
             }
         }
@@ -178,15 +173,8 @@ public class Main {
     }
 
     private static void buscarVehiculo() {
-
         PrintUtils.subtitulo("Buscar vehículo");
-        System.out.println("1. Por marca");
-        System.out.println("2. Por modelo");
-        System.out.println("3. Por año");
-        System.out.println("4. Marca + Modelo");
-        System.out.println("5. Marca + Año");
-        System.out.println("6. Modelo + Año");
-        System.out.println("7. Por estado");
+        PrintUtils.listarOpcionesDeBusqueda();
 
         int op = InputUtils.leerEntero("Opción: ");
 
@@ -238,7 +226,6 @@ public class Main {
     }
 
     private static void eliminarVehiculo() {
-
         PrintUtils.subtitulo("Eliminar vehículo");
         System.out.println("1. Por marca");
         System.out.println("2. Por modelo");
@@ -286,15 +273,8 @@ public class Main {
     }
 
     private static void modificarVehiculo() {
-
         PrintUtils.subtitulo("Modificar vehículo");
-        System.out.println("1. Por marca");
-        System.out.println("2. Por modelo");
-        System.out.println("3. Por año");
-        System.out.println("4. Marca + Modelo");
-        System.out.println("5. Marca + Año");
-        System.out.println("6. Modelo + Año");
-        System.out.println("7. Por estado");
+        PrintUtils.listarOpcionesDeBusqueda();
 
         int op = InputUtils.leerEntero("Opción: ");
 
@@ -411,7 +391,6 @@ public class Main {
     }
 
     private static void procesarTaller() {
-
         if (colaTaller.isEmpty()) {
             PrintUtils.error("No hay vehículos usados para procesar.");
             return;

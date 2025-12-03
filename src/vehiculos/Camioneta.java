@@ -11,14 +11,7 @@ public class Camioneta extends Vehiculo implements Serializable {
     private TipoCarroceriaCamioneta carroceria;
     private int capacidadDeCarga;
 
-    public Camioneta(
-            String marca,
-            String modelo,
-            int anioFabricacion,
-            boolean usado,
-            Color color,
-            TipoCarroceriaCamioneta carroceria,
-            int capacidadDeCarga) {
+    public Camioneta(String marca, String modelo, int anioFabricacion, boolean usado, Color color, TipoCarroceriaCamioneta carroceria, int capacidadDeCarga) {
         super(marca, modelo, anioFabricacion, usado, color);
         this.carroceria = carroceria;
         this.setCapacidadDeCarga(capacidadDeCarga);

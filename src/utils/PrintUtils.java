@@ -18,7 +18,7 @@ public class PrintUtils {
     }
 
     public static void error(String msg) {
-        System.out.println("❌ " + msg);
+        System.out.println(msg);
     }
 
     public static void ok(String msg) {
@@ -29,6 +29,16 @@ public class PrintUtils {
         for (int i = 0; i < elementos.size(); i++) {
             System.out.println((i + 1) + ") " + elementos.get(i));
         }
+    }
+
+    public static void listarOpcionesDeBusqueda() {
+        System.out.println("1. Por marca");
+        System.out.println("2. Por modelo");
+        System.out.println("3. Por año");
+        System.out.println("4. Marca + Modelo");
+        System.out.println("5. Marca + Año");
+        System.out.println("6. Modelo + Año");
+        System.out.println("7. Por estado");
     }
 
     public static void detalleVehiculo(Vehiculo v) {

@@ -22,14 +22,14 @@ public class Taller {
             throw new ColaVaciaException("No hay vehículos en cola.");
 
         if (index < 0 || index >= cola.size())
-            throw new ColaVaciaException("Índice fuera de rango.");
+            throw new ColaVaciaException("Indice fuera de rango.");
 
-        // Convertimos la cola a lista
+        // convertimos la cola a lista para poder acceder por indices (Queue no soporta esto)
         List<Vehiculo> lista = new ArrayList<>(cola);
 
         Vehiculo seleccionado = lista.get(index);
 
-        // Eliminamos el vehículo elegido de la cola real
+        // eliminamos el vehículo elegido de la cola real
         cola.remove(seleccionado);
 
         lavadero.lavarVehiculo(seleccionado);

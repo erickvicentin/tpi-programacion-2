@@ -16,18 +16,10 @@ public class Concesionaria {
         this.colaTaller = colaTaller;
     }
 
-    // ============================================================
-    // AGREGAR VEHÍCULOS
-    // ============================================================
-
     public void agregarVehiculo(Vehiculo v) {
         agregarSiNoExiste(v);
     }
 
-    /**
-     * Agrega el vehículo al inventario solo si no existe uno con el mismo UUID.
-     * También lo agrega a la cola del taller si está usado.
-     */
     public void agregarSiNoExiste(Vehiculo v) {
         boolean existe = inventario.stream()
                 .anyMatch(x -> x.getIdVehiculo().equals(v.getIdVehiculo()));
@@ -38,16 +30,7 @@ public class Concesionaria {
         }
     }
 
-    // ============================================================
-    // BÚSQUEDA AVANZADA
-    // ============================================================
-
-    /**
-     * Búsqueda flexible combinando marca, modelo, año y estado.
-     * Acepta coincidencias parciales (contains) para marca y modelo.
-     */
     public List<Vehiculo> buscarMultiples(String marca, String modelo, Integer anio, Boolean usado) {
-
         return inventario.stream()
                 .filter(v -> marca == null
                         || v.getMarca().equalsIgnoreCase(marca)
@@ -60,15 +43,7 @@ public class Concesionaria {
                 .collect(Collectors.toList());
     }
 
-    // ============================================================
-    // ELIMINACIÓN
-    // ============================================================
-
-    /**
-     * Elimina el vehículo que tenga el UUID especificado.
-     */
     public void eliminarPorId(UUID id) throws VehiculoNoEncontradoException {
-
         Vehiculo encontrado = inventario.stream()
                 .filter(v -> v.getIdVehiculo().equals(id))
                 .findFirst()
@@ -79,12 +54,9 @@ public class Concesionaria {
         }
 
         inventario.remove(encontrado);
-        colaTaller.remove(encontrado); // en caso de que estuviera en la cola
+        colaTaller.remove(encontrado); // en caso de que estuviera en la cola del taller
     }
 
-    // ============================================================
-    // LISTADO
-    // ============================================================
     public List<Vehiculo> listar() {
         return new ArrayList<>(inventario);
     }
