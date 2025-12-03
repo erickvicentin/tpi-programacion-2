@@ -3,7 +3,7 @@ import enums.TipoCarroceriaAuto;
 import enums.TipoCarroceriaCamioneta;
 import enums.TipoMotocicleta;
 import excepciones.ColaVaciaException;
-import persistencia.ArchivoUtil;
+import persistencia.IOFilesUtils;
 import servicios.Lavadero;
 import servicios.Taller;
 import utils.EnumUtils;
@@ -85,7 +85,7 @@ public class Main {
         }
 
         try {
-            List<Vehiculo> lista = ArchivoUtil.leer("vehiculos.dat");
+            List<Vehiculo> lista = IOFilesUtils.leer("vehiculos.dat");
             lista.forEach(concesionaria::agregarSiNoExiste);
             PrintUtils.ok("Inventario cargado automáticamente.");
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class Main {
 
     private static void guardarInventarioAutomatico() {
         try {
-            ArchivoUtil.guardar(concesionaria.listar(), "vehiculos.dat");
+            IOFilesUtils.guardar(concesionaria.listar(), "vehiculos.dat");
             PrintUtils.ok("Inventario guardado automáticamente.");
         } catch (Exception e) {
             PrintUtils.error("Error guardando inventario: " + e.getMessage());

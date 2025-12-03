@@ -4,7 +4,7 @@ import enums.Color;
 import enums.TipoCarroceriaAuto;
 import enums.TipoCarroceriaCamioneta;
 import enums.TipoMotocicleta;
-import persistencia.ArchivoUtil;
+import persistencia.IOFilesUtils;
 import vehiculos.Vehiculo;
 import vehiculos.Camioneta;
 import vehiculos.Automovil;
@@ -50,7 +50,7 @@ public class GeneradorDeDatos {
 
         // Guardar la lista de vehículos
         try {
-            ArchivoUtil.guardar(inventario, ARCHIVO);
+            IOFilesUtils.guardar(inventario, ARCHIVO);
             System.out.println("Datos guardados correctamente en " + ARCHIVO);
         } catch (IOException e) {
             System.err.println("Error al guardar el archivo: " + e.getMessage());

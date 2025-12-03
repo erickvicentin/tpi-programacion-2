@@ -13,7 +13,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArchivoUtil {
+public class IOFilesUtils {
 
     public static void guardar(List<Vehiculo> lista, String archivo) throws IOException {
         // Convertimos la lista en Wrapper
