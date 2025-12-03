@@ -1,25 +1,21 @@
-# Concesionaria - Trabajo Práctico Integrador (Programación 2 – Java)
+# Concesionaria – Simulador de Gestión de Vehículos 🚗
 
-Este proyecto corresponde al Trabajo Práctico Integrador de la materia **Programación 2**, orientado a reforzar los conceptos de:
+## ✨ ¿Qué es esto?
 
-- Programación Orientada a Objetos (POO)
-- Herencia y Polimorfismo
-- Interfaces
-- Excepciones
-- Enumeraciones
-- Estructuras de datos (List, Queue)
-- Persistencia mediante serialización
-- Manejo de menú interactivo por consola
-- Buenas prácticas de organización del código
+Este proyecto es un programa en **Java** que simula una concesionaria de vehículos. Permite crear, administrar y persistir un inventario de distintos tipos de vehículos (automóviles, camionetas, motocicletas), con funcionalidad de:
 
-El sistema simula la administración de una **concesionaria de vehículos**, permitiendo gestionar un inventario persistente y un flujo de trabajo para vehículos usados que deben pasar por un taller.
+- alta, baja y modificación de vehículos  
+- búsqueda flexible por diversos criterios  
+- listado completo del inventario  
+- cálculo de “precio estimado de venta” según reglas propias por tipo de vehículo  
+- manejo de taller para vehículos usados: cola de mantenimiento, lavado, procesamiento individual  
+- persistencia automática mediante serialización: los datos se guardan y cargan desde un archivo `vehiculos.dat`
+
+El objetivo del proyecto es aplicar principios de **Programación Orientada a Objetos (POO)**, buenas prácticas en diseño de software, uso de colecciones, manejo de archivos, y lógica de negocio realista.
 
 ---
 
-## 📁 Contenido del proyecto
-
-### 🔹 **Paquetes principales**
-El repositorio está organizado de forma modular:
+## 📂 Estructura del proyecto
 
 ```
 src/
@@ -36,110 +32,89 @@ src/
 
 ---
 
-## 🚀 Funcionalidades principales
-
-### ✔ **Gestión de inventario**
-- Agregar vehículos
-- Listar vehículos
-- Buscar por:
-  - Marca
-  - Modelo
-  - Año
-  - Estado (nuevo/usado)
-  - Combinaciones (marca + modelo, etc.)
-- Modificar datos de un vehículo
-- Eliminar vehículos con selección por índice
-
-### ✔ **Soporte para distintos tipos de vehículos**
-Cada tipo posee atributos particulares:
-
-| Tipo | Atributos específicos |
-|------|------------------------|
-| Automóvil | Carrocería de auto |
-| Camioneta | Carrocería + capacidad de carga |
-| Motocicleta | Tipo de moto + cilindrada |
-
-### ✔ **Taller para vehículos usados**
-Los vehículos usados ingresan automáticamente a una **cola FIFO**:
-
-- Visualización de la cola
-- Selección manual de cuál procesar
-- Paso por lavado y mantenimiento
-
-### ✔ **Persistencia automática**
-El inventario se guarda en un archivo binario: ```vehiculos.dat```
-
-
-Se carga automáticamente al iniciar el programa y se guarda:
-
-- Al agregar
-- Al modificar
-- Al eliminar
-- Al cerrar el programa
 
 ---
 
-## 🛠 Tecnologías utilizadas
+## 🛠️ Tecnologías y conceptos utilizados
 
-- **Java 17+**
-- Programación Orientada a Objetos
-- Serialización (`ObjectOutputStream / ObjectInputStream`)
-- Estructuras de datos (`ArrayList`, `Queue`)
-- Excepciones personalizadas
-- Menú interactivo por consola
+- **Java 17+**  
+- Programación Orientada a Objetos: herencia, polimorfismo, interfaces, métodos abstractos  
+- Uso de **UUID** para identificar vehículos de forma única  
+- Uso de `List`, `Queue` y Streams para colección y filtrado de datos  
+- Serialización con `ObjectOutputStream / ObjectInputStream` para persistencia  
+- Validación de entrada de datos (año, estado, opciones del menú, etc.)  
+- Interfaz por consola con menús interactivos  
+- Diseño modular con separación de responsabilidades (dominio, persistencia, utilidades, lógica de negocio, UI)  
 
 ---
 
-## ▶️ Ejecución
+## 🚀 Cómo compilar y ejecutar
 
-1. Clonar el repositorio:
+Desde la raíz del proyecto:
 
 ```bash
-git clone https://github.com/erickvicentin/tpi-programacion-2.git
-cd tpi-programacion-2
-```
-2. Compilar el proyecto:
-```
+# 1. Compilar todos los archivos .java
 javac -d out src/**/*.java
-```
-3. Ejecutar:
-```
+
+# 2. Ejecutar la aplicación
 java -cp out Main
 ```
 
-📌 Estructura del menú principal
-```
-========= CONCESIONARIA =========
-1. Agregar vehículo
-2. Listar vehículos
-3. Buscar vehículo
-4. Eliminar vehículo
-5. Procesar vehículo en taller
-6. Modificar vehículo
-0. Salir
-```
+Al iniciar, si existe vehiculos.dat, el programa carga automáticamente el inventario.
+El inventario se guarda automáticamente en las siguientes situaciones:
 
-📘 Objetivos pedagógicos
+- al agregar un vehículo
 
-El proyecto permite practicar:
+- al modificar un vehículo
 
-- Construcción de jerarquías de clases
+- al eliminar un vehículo
 
-- Uso de interfaces y polimorfismo
+- al procesar un vehículo en el taller
 
-- Organización modular del código
+- al salir del programa
 
-- Manejo seguro de entrada del usuario
+✅ Funcionalidades principales
 
-- Filtrado avanzado mediante Streams
+- Agregar vehículos (automóvil, camioneta, motocicleta), con sus atributos específicos
 
-- Separación de responsabilidades (utils, servicios, persistencia)
+- Listar todos los vehículos del inventario
 
-- Persistencia simple pero efectiva
+- Búsqueda flexible: por marca, modelo, año, estado (nuevo/usado) o combinaciones
 
-- Uso de UUID como identificador único
+- Modificar datos de los vehículos
 
-📝 Autores: Vicentin Erick / Aail Luciano
+- Eliminar vehículos, seleccionando entre coincidencias
+
+- Calcular precio estimado de venta según tipo de vehículo y sus atributos
+
+- Cola de taller para vehículos usados: listar, seleccionar y procesar uno por uno
+
+- Persistencia de datos: guardar y cargar inventario automáticamente
+
+📈 Lógica de cálculo de precio de venta
+
+Para cada tipo de vehículo se aplica una fórmula diferente:
+| Tipo de vehículo | Precio base / Reglas                                                                                          |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Automóvil**    | Base: 20.000 (nuevo) / 15.000 (usado) → se descuenta $500 por año de antigüedad (mínimo $7.500)               |
+| **Camioneta**    | Base: 30.000 (nuevo) / 20.000 (usado) → + $5.000 por cada 1.000 kg de carga → − $500 por año (mínimo $10.000) |
+| **Motocicleta**  | Base: 5.000 → + $500 por cada 50 cc → − $200 por año (mínimo $3.000)                                          |
+
+📋 Buenas prácticas de diseño aplicadas
+
+- Cada clase tiene una responsabilidad clara.
+
+- Uso de abstracción y polimorfismo: método calcularPrecioDeVenta() definido en la superclase.
+
+- Separación entre lógica de dominio, persistencia, utilidades e interfaz de usuario.
+
+- Validaciones para entrada de datos.
+
+- Persistencia serializada para mantener estado entre ejecuciones.
+
+- Uso de identificador único (UUID) para cada vehículo, garantizando unicidad global.
+
+## 📝 Autores: Vicentin Erick / Aail Luciano
 
 Trabajo práctico realizado como parte de la materia Programación 2 de la Tecnicatura Universitaria en Programacion de la Universidad Tecnologica Nacional - Facultad Regional Resistencia.
 
